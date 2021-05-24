@@ -82,7 +82,12 @@ fi
 
 if [ "$color_prompt" = yes ]; then
     
-    PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)──}(%B%F{%(#.red.blue)}%n%(#.x.|)%m%b%F{%(#.blue.green)})-[$(pyenv version-name| awk -F\'/\' \'{print $3 ? $3 : $0}\')]-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
+
+	if type "pyenv" >/dev/null; then
+    	PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)──}(%B%F{%(#.red.blue)}%n%(#.x.|)%m%b%F{%(#.blue.green)})-[$(pyenv version-name| awk -F\'/\' \'{print $3 ? $3 : $0}\')]-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
+    else
+    	PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)──}(%B%F{%(#.red.blue)}%n%(#.x.|)%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
+    fi
     RPROMPT=$'%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
 
     # enable syntax-highlighting
@@ -219,21 +224,33 @@ export PATH="$PATH:$origPATH"
 
 ###############################################################
 # pyenv stuff which also modifies path
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
 
-# jEnv!
-eval "$(jenv init -)"
+if type "pyenv" >/dev/null; then
+	# pyenv is installed
+	export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+	eval "$(pyenv init -)"
+	eval "$(pyenv virtualenv-init -)"
+fi
+
+if type "jenv" >/dev/null; then
+	# jenv is installed
+	eval "$(jenv init -)"
+fi
 
 
 ###############################################################
 # Other script includes
 
-# Got my jump scripts! via the "z" module
-# https://github.com/rupa/z
-_Z_CMD=j
-source /home/osboxes/opt/z_jump_script/z.sh
+if [ -f "~/opt/z_jump_script/z.sh" ]; then
+
+	# Got my jump scripts! via the "z" module
+	# https://github.com/rupa/z
+	_Z_CMD=j
+	source ~/opt/z_jump_script/z.sh
+elif [ -f "/opt/z/z.sh" ]; then
+	_Z_CMD=j
+	source /opt/z/z.sh
+fi
 
 
 ###############################################################
@@ -309,6 +326,21 @@ function install-sublime () {
 	sudo apt-get install sublime-text
 }
 
+# didn't seem to do it
+#function install-powerline () {
+#	#Install powerline fonts
+#	sudo apt install fonts-powerline
+#}
+
+function install-tmux-addons () {
+	# tmux yank needs xclip ... and maybe xcopy?
+	sudo apt install xclip
+}
+
+functions keys () {
+	tmux list-keys > /tmp/my_assigned_keys.txt
+	sublime /tmp/my_assigned_keys.txt
+}
 
 ###############################################
 
@@ -359,7 +391,6 @@ alias showvar="showvars"
 alias show="showvars"
 alias var="showvars"
 alias vars="showvars"
-alias keys="tmux-show-keys.sh"
 alias clip="xclip -selection c"
 
 alias ga="git add -A && git status"
@@ -386,8 +417,10 @@ alias -g colorip="egrep ('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'|'\|')"
 
 alias locate="locate -i"  # Need that case insensitve locate! dang.
 
-
-alias cat="/home/osboxes/go/src/github.com/jingweno/ccat/ccat --bg dark "
+# Check that ccat exists before setting up an alias for it
+if [ -f "~/go/src/github.com/jingweno/ccat/ccat" ]; then
+	alias cat="/home/osboxes/go/src/github.com/jingweno/ccat/ccat --bg dark "
+fi
 
 alias nmap_udp_1='sudo env "TARG_HOST=$TARG_HOST" /home/osboxes/bin/kali/nmap5.sh'
 alias nmap_udp_2='sudo env "TARG_HOST=$TARG_HOST" /home/osboxes/bin/kali/nmap6.sh'
@@ -598,20 +631,22 @@ postfiledumphere() {
 ###############################################
 # tmux commands
 
-tmux set-buffer -b pyshell "python3 -c 'import pty; pty.spawn(\"/bin/bash\")'"
-tmux set-buffer -b pyshell2 "python -c 'import pty; pty.spawn(\"/bin/bash\")'"
-tmux set-buffer -b term "export TERM=xterm-256color"
-tmux set-buffer -b stty "stty rows 49 columns 261"
-tmux set-buffer -b path "export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-tmux set-buffer -b bashrc "$(cat ~/.bashrc)"
-tmux set-buffer -b win-enable-rdp "reg add \"HKLM\System\CurrentControlSet\Control\Terminal Server\" /v fDenyTSConnections /t REG_DWORD /d 0 /f"
-tmux set-buffer -b win-localgroup-adminadd "net localgroup administrators hacker2 /add"
-tmux set-buffer -b win-useradd-STRONG "net user hacker2 SomePass11#! /add"
-tmux set-buffer -b win-useradd-weak "net user hacker2 somepassword97 /add"
-tmux set-buffer -b win-useradd-no-PW "net user hacker2 /add"
-tmux set-buffer -b win-userlist "net user"
-tmux set-buffer -b win-powershell-bypass "powershell -executionpolicy bypass -command \". \$pwd\\powerup.ps1\""
-
+if [ -n "$TMUX" ]; then
+	# We're in a tmux session
+	tmux set-buffer -b pyshell "python3 -c 'import pty; pty.spawn(\"/bin/bash\")'"
+	tmux set-buffer -b pyshell2 "python -c 'import pty; pty.spawn(\"/bin/bash\")'"
+	tmux set-buffer -b term "export TERM=xterm-256color"
+	tmux set-buffer -b stty "stty rows 49 columns 261"
+	tmux set-buffer -b path "export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+	tmux set-buffer -b bashrc "$(cat ~/.bashrc)"
+	tmux set-buffer -b win-enable-rdp "reg add \"HKLM\System\CurrentControlSet\Control\Terminal Server\" /v fDenyTSConnections /t REG_DWORD /d 0 /f"
+	tmux set-buffer -b win-localgroup-adminadd "net localgroup administrators hacker2 /add"
+	tmux set-buffer -b win-useradd-STRONG "net user hacker2 SomePass11#! /add"
+	tmux set-buffer -b win-useradd-weak "net user hacker2 somepassword97 /add"
+	tmux set-buffer -b win-useradd-no-PW "net user hacker2 /add"
+	tmux set-buffer -b win-userlist "net user"
+	tmux set-buffer -b win-powershell-bypass "powershell -executionpolicy bypass -command \". \$pwd\\powerup.ps1\""
+fi
 
 ###############################################
 # Need these below the PATH changes above.
