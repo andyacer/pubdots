@@ -378,16 +378,11 @@ alias -g colorip="egrep ('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'|'\|')"
 
 alias locate="locate -i"  # Need that case insensitve locate! dang.
 
-# Set DNS for OSCP lab greatness
-alias setdns="sudo cp /home/osboxes/Documents/openvpn-oscp/resolv-mod.conf /etc/resolv.conf"
-alias unsetdns="sudo cp /home/osboxes/Documents/openvpn-oscp/resolv-orig.conf /etc/resolv.conf"
 
 alias cat="/home/osboxes/go/src/github.com/jingweno/ccat/ccat --bg dark "
 
 alias nmap_udp_1='sudo env "TARG_HOST=$TARG_HOST" /home/osboxes/bin/kali/nmap5.sh'
 alias nmap_udp_2='sudo env "TARG_HOST=$TARG_HOST" /home/osboxes/bin/kali/nmap6.sh'
-#alias checkexam="curl -s https://www.offensive-security.com/exam.php?md=91bfddad5a9407540737ac5f3e25f557 | pup 'select[name=\"day\"]' | grep \"value=\""
-alias checkexam="while true; do curl -s https://www.offensive-security.com/exam.php?md=91bfddad5a9407540737ac5f3e25f557 | pup 'select[name=\"day\"]' | grep \"value=\"; printf \" %s\n\" \$(nownow);printf \"-----------------------------------\n\"; sleep 180; done"
 
 ########## Nmap / nmap smb stuff below 
 
@@ -492,7 +487,7 @@ function run-masscan-http() {
 }
 
 ##############################################################################################################
-# MY DOCKER GREATNESS
+# MY DOCKER STUFF
 ##############################################################################################################
 # A work in progress... ;)
 
