@@ -51,6 +51,65 @@ setopt INC_APPEND_HISTORY
 # force zsh to show the complete history
 alias history="history 0"
 
+
+###############################################################
+# My PATH modifications
+
+
+
+# Convention here is that the line order matters.  
+#  Existing PATH is first, only append additions at the end.
+
+origPATH="$PATH"
+
+#pyenv wins for that start
+export PATH="$HOME/.pyenv/bin"
+
+#PATH START - kali bin folder comes next
+export PATH="$PATH:$HOME/bin/kali"
+export PATH="$PATH:$HOME/bin"
+
+#PATH MIDDLE - here's the rest
+export PATH="$PATH:$HOME/.jenv/bin"
+export PATH="$PATH:$HOME/.cargo/bin"
+
+#PATH END - append original path, so it's actually at the end.
+export PATH="$PATH:$origPATH"
+
+
+###############################################################
+# pyenv stuff which also modifies path
+
+if type "pyenv" >/dev/null; then
+	# pyenv is installed
+	export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+	eval "$(pyenv init -)"
+	eval "$(pyenv virtualenv-init -)"
+fi
+
+if type "jenv" >/dev/null; then
+	# jenv is installed
+	eval "$(jenv init -)"
+fi
+
+
+###############################################################
+# Other script includes
+
+if [ -f "/opt/z_jump_script/z.sh" ]; then
+
+	# Got my jump scripts! via the "z" module
+	# https://github.com/rupa/z
+	_Z_CMD=j
+	source /opt/z_jump_script/z.sh
+elif [ -f "/opt/z/z.sh" ]; then
+	_Z_CMD=j
+	source /opt/z/z.sh
+fi
+
+
+###############################################################
+
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -197,60 +256,6 @@ if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 fi
 
-###############################################################
-# My PATH modifications
-
-
-
-# Convention here is that the line order matters.  
-#  Existing PATH is first, only append additions at the end.
-
-origPATH="$PATH"
-
-#pyenv wins for that start
-export PATH="$HOME/.pyenv/bin"
-
-#PATH START - kali bin folder comes next
-export PATH="$PATH:$HOME/bin/kali"
-export PATH="$PATH:$HOME/bin"
-
-#PATH MIDDLE - here's the rest
-export PATH="$PATH:$HOME/.jenv/bin"
-export PATH="$PATH:$HOME/.cargo/bin"
-
-#PATH END - append original path, so it's actually at the end.
-export PATH="$PATH:$origPATH"
-
-
-###############################################################
-# pyenv stuff which also modifies path
-
-if type "pyenv" >/dev/null; then
-	# pyenv is installed
-	export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-	eval "$(pyenv init -)"
-	eval "$(pyenv virtualenv-init -)"
-fi
-
-if type "jenv" >/dev/null; then
-	# jenv is installed
-	eval "$(jenv init -)"
-fi
-
-
-###############################################################
-# Other script includes
-
-if [ -f "~/opt/z_jump_script/z.sh" ]; then
-
-	# Got my jump scripts! via the "z" module
-	# https://github.com/rupa/z
-	_Z_CMD=j
-	source ~/opt/z_jump_script/z.sh
-elif [ -f "/opt/z/z.sh" ]; then
-	_Z_CMD=j
-	source /opt/z/z.sh
-fi
 
 
 ###############################################################
