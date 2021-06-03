@@ -195,6 +195,12 @@ if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     . /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
     # change suggestion color
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
+elif [ -f ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+	#statements
+	source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+	# change suggestion color
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=cyan'
 fi
 
 ###############################################################
@@ -424,6 +430,9 @@ fi
 
 alias nmap_udp_1='sudo env "TARG_HOST=$TARG_HOST" /home/osboxes/bin/kali/nmap5.sh'
 alias nmap_udp_2='sudo env "TARG_HOST=$TARG_HOST" /home/osboxes/bin/kali/nmap6.sh'
+
+
+alias get-autosug="git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions"
 
 ########## Nmap / nmap smb stuff below 
 
