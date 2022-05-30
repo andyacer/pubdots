@@ -16,6 +16,7 @@ HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
 shopt -s histappend
+PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=100000
@@ -116,6 +117,7 @@ alias l='ls -CF'
 alias grep='grep -i --color=auto'
 alias ..="cd .."
 alias hist="history | tail -n 100"
+alias hg="history | grep"
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
