@@ -320,6 +320,8 @@ alias mip="f__get_my_ips"  # My IP addresses
 alias update_history="fc -IR"
 alias space="ncdu"
 alias tree="tree -a" # Make tree alway show hidden files.  Interesting gotcha.
+alias strsearch="strsearch.sh"
+
 alias profile="subl ~/.zshrc"
 
 alias landroid="if [[ -d ~/bin ]]; then ls ~/bin; else ls ~/mobile-hacking-mac; fi | grep -i andr"
