@@ -399,8 +399,7 @@ bind i choose-tree -Zs
 # Don't allow custom-named windows to be renamed
 set -g allow-rename off
 
-#run "if [[ -n $(which xclip | grep 'not found') ]]; then echo 'Error: for Tmux on Linux, with the yank plugin, install xclip.' > ~/ERROR_TMUX_YANK_PLUGIN_MISSING_XCLIP.txt; fi"
-
+# Check for xclip and warn user if its not found
 run "if echo $(which xclip) | grep 'not found' >/dev/null; then echo 'Error: for Tmux on Linux, with the yank plugin, install xclip.' > ~/ERROR_TMUX_YANK_PLUGIN_MISSING_XCLIP.txt; fi"
 
 #run "if [ 100 -gt 50 ]; then echo 'test' > ~/newtest; fi"

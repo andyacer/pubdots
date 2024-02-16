@@ -298,12 +298,22 @@ function f__install_autosuggest() {
 	# Reference: zsh-autosuggestions
 	# https://github.com/zsh-users/zsh-autosuggestions
 	# https://software.opensuse.org/download.html?project=shells%3Azsh-users%3Azsh-autosuggestions&package=zsh-autosuggestions
-	echo "About to install ZSH zsh-autosuggestions using curl commands and sudo apt install."
+	echo "About to install ZSH zsh-autosuggestions using curl commands and sudo apt install / yum."
 	pause_for_user_confirm
-	echo 'deb http://download.opensuse.org/repositories/shells:/zsh-users:/zsh-autosuggestions/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/shells:zsh-users:zsh-autosuggestions.list
-	curl -fsSL https://download.opensuse.org/repositories/shells:zsh-users:zsh-autosuggestions/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_zsh-users_zsh-autosuggestions.gpg > /dev/null
-	sudo apt update
-	sudo apt install zsh-autosuggestions
+
+	if type "yum" >/dev/null; then
+		# Try the yum approach
+		sudo yum install git
+		git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+		# Edit this file to add this:
+		echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
+	else
+		# Maybe we're on Ubuntu
+		echo 'deb http://download.opensuse.org/repositories/shells:/zsh-users:/zsh-autosuggestions/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/shells:zsh-users:zsh-autosuggestions.list
+		curl -fsSL https://download.opensuse.org/repositories/shells:zsh-users:zsh-autosuggestions/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_zsh-users_zsh-autosuggestions.gpg > /dev/null
+		sudo apt update
+		sudo apt install zsh-autosuggestions
+	fi
 }
 
 
