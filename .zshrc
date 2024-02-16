@@ -248,6 +248,12 @@ function f__my_figcow () {
 	figlet "$@" | cowsay -n
 }
 
+function pause_for_user_confirm() {
+  # Confirm with user
+  read -s -k '?Press any key to continue...'
+  printf "\n\n"
+}
+
 # PS and grep combo
 function f__ps_grep () {
 	ps -e | \egrep -i --color=auto "PID TTY|$1"
@@ -288,7 +294,23 @@ function f__get_path () {
 	echo "$PATH" | tr \\: \\\n
 }
 
+function f__install_autosuggest() {
+	# Reference: zsh-autosuggestions
+	# https://github.com/zsh-users/zsh-autosuggestions
+	# https://software.opensuse.org/download.html?project=shells%3Azsh-users%3Azsh-autosuggestions&package=zsh-autosuggestions
+	echo "About to install ZSH zsh-autosuggestions using curl commands and sudo apt install."
+	pause_for_user_confirm
+	echo 'deb http://download.opensuse.org/repositories/shells:/zsh-users:/zsh-autosuggestions/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/shells:zsh-users:zsh-autosuggestions.list
+	curl -fsSL https://download.opensuse.org/repositories/shells:zsh-users:zsh-autosuggestions/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_zsh-users_zsh-autosuggestions.gpg > /dev/null
+	sudo apt update
+	sudo apt install zsh-autosuggestions
+}
+
+
 ###############################################
+
+# Sudo alias fix.  'll' available in sudo!
+alias sudo='sudo '
 
 # Some more ls aliases
 alias ll='ls -l -a -h'
@@ -298,13 +320,16 @@ alias l='la'
 alias showpath="f__get_path"
 alias pathshow="showpath"
 
+# Install stuff
+alias install-autosuggest="f__install_autosuggest"
+
 # force zsh to show the complete history
 alias history="history 0"
 alias histg="history | \fgrep --color=auto -i"
 alias histe="history | \egrep --color=auto -i"
 alias hist="\history -100"
 alias hsit="\history -100"
-alias locate="mdfind -name"  # MDFIND IS WAY BETTER THAN LOCATE ON A MAC.
+#alias locate="mdfind -name"  # MDFIND IS WAY BETTER THAN LOCATE ON A MAC.
 
 alias bang="f__print_command_accelerators"
 alias hg="histg"
