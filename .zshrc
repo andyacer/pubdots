@@ -327,6 +327,8 @@ alias ll='ls -l -a -h'
 alias la='ls -l -h'
 alias l='la'
 
+alias g="grep --color=auto"
+
 alias showpath="f__get_path"
 alias pathshow="showpath"
 
