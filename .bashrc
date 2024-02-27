@@ -2,6 +2,11 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# Ensure UTF-8 is available for powerline fonts at all times
+# https://askubuntu.com/questions/410048/utf-8-character-not-showing-properly-in-tmux
+export LC_ALL=en_IN.UTF-8
+export LANG=en_IN.UTF-8
+
 export PATH="/bin/:$PATH"
 
 # If not running interactively, don't do anything
